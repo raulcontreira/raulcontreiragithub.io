@@ -1,3 +1,8 @@
+# Geovanna de Freitas RA: 22502903
+# Giovanna Souza  RA: 22503064
+# Gustavo Ramos  RA: 22510641
+# Raul Duarte  RA: 22511188
+
 # Weather PWA ☁️
 
 Progressive Web App de previsão do tempo com dados em tempo real fornecidos pela API OpenWeatherMap.
