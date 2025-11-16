@@ -1,0 +1,37 @@
+# Build stage
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+# Instalar pnpm e dependências
+RUN npm install -g pnpm && \
+    pnpm install --frozen-lockfile
+
+# Copiar código fonte
+COPY client ./client
+COPY shared ./shared
+COPY vite.config.ts ./
+COPY tsconfig.json ./
+COPY tsconfig.node.json ./
+
+# Build da aplicação
+RUN pnpm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copiar build para nginx
+COPY --from=build /app/client/dist /usr/share/nginx/html
+
+# Copiar configuração customizada do nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expor porta 80
+EXPOSE 80
+
+# Iniciar nginx
+CMD ["nginx", "-g", "daemon off;"]

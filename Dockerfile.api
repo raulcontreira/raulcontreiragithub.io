@@ -1,0 +1,22 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+# Instalar pnpm e dependências
+RUN npm install -g pnpm && \
+    pnpm install --frozen-lockfile --prod
+
+# Copiar código fonte
+COPY server ./server
+COPY shared ./shared
+COPY drizzle ./drizzle
+
+# Expor porta do servidor
+EXPOSE 3000
+
+# Comando para iniciar o servidor
+CMD ["node", "server/_core/index.js"]
