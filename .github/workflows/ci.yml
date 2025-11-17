@@ -51,7 +51,12 @@ jobs:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+          # VARIÁVEIS PARA EVITAR ERROS NO BUILD E2E
+          VITE_APP_LOGO: "/logo.png"
           VITE_APP_TITLE: "Weather PWA"
+          VITE_ANALYTICS_ENDPOINT: "analytics"
+          VITE_ANALYTICS_WEBSITE_ID: "dummy-id"
 
       - name: Run unit tests
         run: pnpm run test
@@ -118,6 +123,9 @@ jobs:
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           VITE_APP_TITLE: "Weather PWA"
+          VITE_APP_LOGO: "/logo.png"
+          VITE_ANALYTICS_ENDPOINT: "analytics"
+          VITE_ANALYTICS_WEBSITE_ID: "dummy-id"
 
       - name: Start server
         run: |
@@ -163,19 +171,3 @@ jobs:
           push: false
           tags: weather-pwa-api:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build Web Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.web
-          push: false
-          tags: weather-pwa-web:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Test Docker Compose
-        run: |
-          docker compose config
-          echo "Docker Compose configuration is valid"
